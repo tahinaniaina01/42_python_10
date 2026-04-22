@@ -7,7 +7,7 @@
 #   By: trakotos <trakotos@student.42antananarivo.   +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/04/22 16:44:02 by trakotos            #+#    #+#            #
-#   Updated: 2026/04/22 17:44:20 by trakotos           ###   ########.fr      #
+#   Updated: 2026/04/22 17:57:32 by trakotos           ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -34,7 +34,7 @@ def power_validator(min_power: int) -> Callable:
         @wraps(func)
         def wrapper(power: int, *arg: tuple, **kwargs: dict) -> Any:
             if power >= min_power:
-                return func(power, *arg, **kwargs)
+                return func(*arg, **kwargs)
             return "Insufficient power for this spell"
         return wrapper
     return decorator
@@ -55,13 +55,14 @@ def retry_spell(max_attempts: int) -> Callable:
     return decorator
 
 
-# class MageGuild:
-#     @staticmethod
-#     def validate_mage_name(name: str) -> bool:
-#         pass
+class MageGuild:
+    @staticmethod
+    def validate_mage_name(name: str) -> bool:
+        return len(name) >= 3 and name.replace(" ", "").isalpha()
 
-#     def cast_spell(self, spell_name: str, power: int) -> str:
-#         pass
+    @power_validator(min_power=10)
+    def cast_spell(self, spell_name: str, power: int) -> str:
+        return f"Successfully cast {spell_name} with {power} power"
 
 
 @spell_timer
@@ -95,3 +96,10 @@ if __name__ == "__main__":
     print("\nTesting retrying spell...")
     print(cast_spell(5))
     print(cast_spell("fireball"))
+
+    print("\nTesting MageGuild...")
+    mg = MageGuild()
+    print(MageGuild.validate_mage_name("test"))
+    print(MageGuild.validate_mage_name("other_test"))
+    print(mg.cast_spell(15, "Lightning"))
+    print(mg.cast_spell(5, "Lightning"))
