@@ -7,7 +7,7 @@
 #   By: trakotos <trakotos@student.42antananarivo.   +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/04/21 16:57:47 by trakotos            #+#    #+#            #
-#   Updated: 2026/04/22 16:43:08 by trakotos           ###   ########.fr      #
+#   Updated: 2026/04/22 17:05:38 by trakotos           ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -15,6 +15,7 @@ from collections.abc import Callable
 from operator import add, mul
 from typing import Any
 from functools import reduce, partial, lru_cache, singledispatch
+
 
 def spell_reducer(spells: list[int], operation: str) -> int:
     operations = ["add", "multiply", "max", "min"]
