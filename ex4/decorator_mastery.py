@@ -7,7 +7,7 @@
 #   By: trakotos <trakotos@student.42antananarivo.   +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/04/22 16:44:02 by trakotos            #+#    #+#            #
-#   Updated: 2026/04/22 17:57:32 by trakotos           ###   ########.fr      #
+#   Updated: 2026/04/27 08:34:40 by trakotos           ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -32,8 +32,10 @@ def spell_timer(func: Callable) -> Callable:
 def power_validator(min_power: int) -> Callable:
     def decorator(func: Callable) -> Callable:
         @wraps(func)
-        def wrapper(power: int, *arg: tuple, **kwargs: dict) -> Any:
-            if power >= min_power:
+        def wrapper(*arg: tuple, **kwargs: dict) -> Any:
+            if not isinstance(arg[-1], int):
+                return "power invalid"
+            if arg[-1] >= min_power:
                 return func(*arg, **kwargs)
             return "Insufficient power for this spell"
         return wrapper
@@ -50,7 +52,7 @@ def retry_spell(max_attempts: int) -> Callable:
                     return res
                 except Exception:
                     print(f"Spell failed, retrying...({i + 1}/{max_attempts})")
-            return "Spell casting failed after max_attempts attempts"
+            return f"Spell casting failed after {max_attempts} attempts"
         return wrapper
     return decorator
 
@@ -101,5 +103,5 @@ if __name__ == "__main__":
     mg = MageGuild()
     print(MageGuild.validate_mage_name("test"))
     print(MageGuild.validate_mage_name("other_test"))
-    print(mg.cast_spell(15, "Lightning"))
-    print(mg.cast_spell(5, "Lightning"))
+    print(mg.cast_spell("Lightning", 15))
+    print(mg.cast_spell("Lightning", 5))
