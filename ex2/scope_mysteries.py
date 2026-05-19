@@ -43,11 +43,9 @@ def memory_vault() -> dict[str, Callable]:
     memories: dict[str, Any] = {}
 
     def store(key: str, value: Any) -> None:
-        nonlocal memories
         memories.update({key: value})
 
     def recall(key: str) -> Any:
-        nonlocal memories
         if key not in memories.keys():
             return "Memory not found"
         return memories[key]

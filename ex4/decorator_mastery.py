@@ -7,7 +7,7 @@
 #   By: trakotos <trakotos@student.42antananarivo.   +#+  +:+       +#+       #
 #                                                  +#+#+#+#+#+   +#+          #
 #   Created: 2026/04/22 16:44:02 by trakotos            #+#    #+#            #
-#   Updated: 2026/04/27 08:34:40 by trakotos           ###   ########.fr      #
+#   Updated: 2026/05/19 13:21:45 by trakotos           ###   ########.fr      #
 #                                                                             #
 # ########################################################################### #
 
@@ -15,6 +15,7 @@ from collections.abc import Callable
 from functools import wraps
 from typing import Any
 from time import time, sleep
+from inspect import signature
 
 
 def spell_timer(func: Callable) -> Callable:
@@ -33,9 +34,15 @@ def power_validator(min_power: int) -> Callable:
     def decorator(func: Callable) -> Callable:
         @wraps(func)
         def wrapper(*arg: tuple, **kwargs: dict) -> Any:
-            if not isinstance(arg[-1], int):
-                return "power invalid"
-            if arg[-1] >= min_power:
+            sign = signature(func)
+            bound = sign.bind(*arg, **kwargs)
+            bound.apply_defaults()
+            power = bound.arguments.get("power")
+            if power is None:
+                return "power argument not found"
+            if not isinstance(power, int):
+                return "invalide type of power"
+            if power >= min_power:
                 return func(*arg, **kwargs)
             return "Insufficient power for this spell"
         return wrapper
